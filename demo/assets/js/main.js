@@ -716,7 +716,7 @@ async function loadDemoImage() {
         const list = await fetchImageList();
         state.list = Array.from(new Set((list || []).filter(Boolean)));
         if (!state.list.length) {
-            state.list = ['https://lacehold.co/640x640/eee/333?text=Demo+Image'];
+            state.list = ['https://placehold.co/640x640/eeeeee04/333?text=Demo+Image'];
         }
         state.order = [...state.list];
         shuffle(state.order);
