@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 63
+names: ['prio_give_way', 'prio_stop', 'prio_priority_road', 'forb_speed_over_5', 'forb_speed_over_10', 'forb_speed_over_20', 'forb_speed_over_30', 'forb_speed_over_40', 'forb_speed_over_50', 'forb_speed_over_60', 'forb_speed_over_70', 'forb_speed_over_80', 'forb_speed_over_90', 'forb_speed_over_100', 'forb_speed_over_110', 'forb_speed_over_120', 'forb_speed_over_130', 'forb_no_entry', 'forb_no_parking', 'forb_no_stopping', 'forb_overtake_car', 'forb_overtake_trucks', 'forb_trucks', 'forb_turn_left', 'forb_turn_right', 'forb_weight_over_3.5t', 'forb_weight_over_7.5t', 'forb_u_turn', 'info_bus_station', 'info_crosswalk', 'info_highway', 'info_one_way', 'info_parking', 'info_taxi_parking', 'warn_children', 'warn_construction', 'warn_crosswalk', 'warn_cyclists', 'warn_left_curve', 'warn_right_curve', 'warn_domestic_animals', 'warn_other_dangers', 'warn_poor_road_surface', 'warn_roundabout', 'warn_sharp_left_curve', 'warn_sharp_right_curve', 'warn_slippery_road', 'warn_hump', 'warn_traffic_light', 'warn_tram', 'warn_two_way_traffic', 'warn_wild_animals', 'mand_bike_lane', 'mand_go_left', 'mand_go_left_right', 'mand_go_right', 'mand_go_straight', 'mand_go_straight_left', 'mand_go_straight_right', 'mand_pass_left', 'mand_pass_left_right', 'mand_pass_right', 'mand_roundabout']
+
+roboflow:
+  workspace: alessandros-workspace
+  project: street-sign-set-xzdde
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/alessandros-workspace/street-sign-set-xzdde/dataset/2
