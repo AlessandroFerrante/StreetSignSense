@@ -3,6 +3,3 @@ demo/assets/models/*.json filter=lfs diff=lfs merge=lfs -text
 *.ipynb filter=nbstripout
 *.zpln filter=nbstripout
 *.ipynb diff=ipynb
-demo/assets/images/demo_images/*.jpg filter=lfs diff=lfs merge=lfs -text
-demo/assets/images/demo_images/*.jpeg filter=lfs diff=lfs merge=lfs -text
-demo/assets/images/demo_images/*.png filter=lfs diff=lfs merge=lfs -text
