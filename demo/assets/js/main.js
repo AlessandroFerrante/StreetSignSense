@@ -685,7 +685,8 @@ async function loadDemoImage() {
     };
     currentImagePath = '';
     const state = window._demoImagesState;
-    const folderPath = './demo/assets/images/demo_images/';
+    const HOST_ROOT = 'https://alessandroferrante.github.io';
+    const MANIFEST_PATH_ABSOLUTE = '/StreetSignSense/demo/assets/images/demo_images/manifest.json'; 
 
     function shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -697,18 +698,15 @@ async function loadDemoImage() {
     async function fetchImageList() {
         
         try {
-            const res = await fetch(folderPath, { cache: 'no-store' });
-            if (res.ok) {
-                const text = await res.text();
-                const matches = [...text.matchAll(/href=["']([^"']+\.(?:jpg|jpeg|png|gif|webp))["']/ig)];
-                const files = matches.map(m => m[1]).filter(Boolean).map(name => {
-                    if (name.startsWith('http') || name.startsWith('/')) return name;
-                    return folderPath + name.replace(/^\.\// , '');
-                });
-                if (files.length) return files;
+            const response = await fetch(MANIFEST_PATH_ABSOLUTE, { cache: 'no-store' }); 
+            if (response.ok) {
+                const assetPaths = await response.json(); 
+                const fullUrls = assetPaths.map(path => HOST_ROOT + path);
+                if (fullUrls.length) return fullUrls;
             }
-        } catch (e) { /* ignore */ }
-
+        } catch (error) { 
+            console.error("Error fetching image mifest:", error);
+        }
         return [];
     }
 
