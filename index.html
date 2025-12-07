@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="MobileOptimized" content="width">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="Alessandro Ferrante">
+    <meta name="description" content="Street Sign Sense, a web demo of an object detection model created by Alessandro Ferrante. Created with YOLO12 for real-time traffic sign detection from images, videos or webcams.">
+    <meta name="keywords" content="Street Sign Sense, Road Sign Detection, YOLOv12, YOLO, Object Detection, Computer Vision, Machine Learning, Deep Learning, Web Demo, Alessandro Ferrante">
+    <meta name="keywords" content="Street Sign Sense, Rilevamento Segnali Stradali, YOLOv12, YOLO, Object Detection, Computer Vision, Machine Learning, Deep Learning, Demo Web, Alessandro Ferrante">
+    <title>Street Sign Sense - Object Detection Model</title>
+    <link rel="icon" href="./demo/assets/images/LogoAzure.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="./demo/assets/images/LogoAzure.ico">
+    <link rel="canonical" href="https://alessandroferrante.github.io/StreetSignSense/"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link type="text/css" href="./demo/assets/css/style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://ka-f.fontawesome.com" crossorigin="">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+    <script src="https://kit.fontawesome.com/a726a595d5.js" crossorigin="anonymous"></script>
+</head>
+<body id="container">
+    <div class="container">
+        <header>
+            <a href="https://alessandroferrante.net/" target="_blank">
+                <div class="logonav"></div>
+            </a>
+            <h1>Street Sign Sense</h1>
+            <div class="info" id="info"></div>
+            <div class="info-close" id="info-close">
+                <span id="closeInfoButton" class="close" style="cursor: pointer; color: red;" ><i class="fa-regular fa-circle-xmark" style="color: #ff0000; font-size: 20px;"></i></span>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            
+            <div class="main-content">
+                <div id="detection-container">
+                    <canvas id="displayCanvas" width="640" height="640"></canvas>
+                    <canvas id="canvas" width="640" height="640"></canvas>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                
+                <div id="status" class="card">
+                    <div id="loader" class="loader"></div>
+                    <span id="status-text">Loading model <i class="fas fa-download"></i></span>
+                </div>
+
+                <div class="card">
+                    <label for="model-select">Select Model YOLO12:</label>
+                    <select id="model-select">
+                        <option value="yolo12n" data-path="./demo/assets/models/StreetSignSenseY12n_tfjs_converted/model.json">YOLOv12n (Nano - Fast)</option>
+                        </i><option selected value="yolo12s" data-path="./demo/assets/models/StreetSignSenseY12s_tfjs_converted/model.json">YOLOv12s (Small - Balanced)<i class="fas fa-star"></i></option>
+                        <option value="yolo12m" data-path="./demo/assets/models/StreetSignSenseY12m_tfjs_converted/model.json">YOLOv12m (Medium - Accurate)</option>
+                    </select>
+                    <button id="load-model-btn" class="btn btn-azure btn-full">
+                        Load Selected Model <i class="fas fa-download"></i>
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="settings-grid">
+                        <div>
+                            <label>Confidence</label>
+                            <input type="range" id="confidence" min="10" max="90" value="40" class="glass-range">
+                            <span id="conf-value" class="text-xs">0.40</span>
+                        </div>
+                        <div>
+                            <label>IOU Threshold</label>
+                            <input type="range" id="iou" min="10" max="90" value="45" class="glass-range">
+                            <span id="iou-value" class="text-xs">0.45</span>
+                        </div>
+                        <div>
+                            <label>Max Detections</label>
+                            <input type="number" id="max-det" min="1" max="100" value="30">
+                        </div>
+                        <div class="settings-grid-item-end">
+                            <button id="apply-settings" class="btn btn-azure btn-full">
+                                Apply <i class="fas fa-wand-magic-sparkles"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card button-group" id="button-group">
+                    <label for="file-upload" class="btn btn-blue">
+                        <i class="fas fa-file-import"></i>  Upload File
+                    </label>
+                    <input type="file" id="file-upload" accept="image/*,video/*" class="hidden">
+                    
+                    <label for="camera-capture" class="btn btn-purple">
+                        <i class="fas fa-camera"></i>  Take Photos
+                    </label>
+                    <input type="file" id="camera-capture" accept="image/*" capture="environment" class="hidden">
+                    
+                    <button id="webcam-btn" class="btn btn-green">
+                        <i class="fas fa-video"></i>  Webcam
+                    </button>
+                    
+                    <button id="demo-btn" class="btn btn-orange">
+                        <i class="fas fa-eye"></i>  Demo Image
+                    </button>
+                </div>
+
+                <div id="info" class="card">
+                    <div class="info-stats">
+                        <span>Objects: <span id="obj-count">0</span></span>
+                        <span>FPS: <span id="fps">0</span></span>
+                        <span>Inference: <span id="inference-time">0</span>ms</span>
+                    </div>
+                    <div id="detections-list"></div>
+                </div>
+
+                <div id="video-controls" class="card hidden">
+                    <label>Video Controls</label>
+                    <video id="video-element" class="hidden"></video>
+                    <div class="video-controls-flex">
+                        <button id="play-pause" class="btn btn-blue"><i class="fas fa-film"></i> <i class="fas fa-play"></i></button>
+                        <button id="analyze-video" class="btn btn-green"><i class="fas fa-film"></i>  Analyze</button>
+                        <input type="range" id="video-seek" min="0" max="100" value="0" class="glass-range">
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div> 
+    <div class="footer">
+        <p>© 2025 Made by <a href="https://alessandroferrante.net/" target="_blank">Alessandro Ferrante</a>. All rights reserved.</p>
+    </div>
+
+    <div id="infoModal" class="modal">
+
+        <div class="modal-content">
+            <h2 class="modal-title">🚀 What is Street Sign Sense?</h2>
+            <p>
+                <strong>Street Sign Sense</strong> is an object detection model designed for the real-time identification and localization of road signs.
+            </p>
+            <p>
+                This demo demonstrates the power of modern <em>object detection</em> models in analyzing images and video streams to extract information from the environment.
+            </p>
+        </div>
+
+        <!-- Section 2: How It Works -->
+        <div class="modal-content" id="modal-howitworks">
+            <h2 class="modal-title">⚙️ How It Works</h2>
+            <p>
+                The system uses a <em>state-of-the-art</em> model from the <strong>YOLO12 (You Only Look Once)</strong> family, an algorithm known for its exceptional balance between accuracy and inference speed.
+            </p>
+            
+            <dl class="how-it-works-list">
+                
+                <dt>1. Model Selection</dt>
+                <dd>
+                    You can choose from different variants, such as <strong>YOLO12n (Nano)</strong>. The "Nano" model is optimized for maximum speed (high FPS).
+                </dd>
+
+                <dt>2. Input</dt>
+                <dd>
+                    The model can analyze various sources: a static image (<code>Upload File</code>), an instant snapshot (<code>Take Photos</code>), or a real-time video stream (<code>Webcam</code>).
+                </dd>
+
+                <dt>3. Parameter Adjustment</dt>
+                <dd>
+                    <strong>Confidence:</strong> Defines the certainty threshold (from 0 to 1) required for the model to label an object. Lower values increase the number of detections but also the risk of false positives.
+                    <br>
+                    <strong>IOU Threshold:</strong> The <em>Intersection over Union</em> (IOU) threshold is used by <em>Non-Maximum Suppression (NMS)</em> to manage duplicate detections, eliminating bounding boxes that overlap beyond the set threshold.
+                </dd>
+
+                <dt>4. Output</dt>
+                <dd>
+                    The system highlights detected signs and measures performance in terms of <strong>FPS</strong> (Frames Per Second) and <strong>Inference</strong> (time in milliseconds to analyze a single frame).
+                </dd>
+            </dl>
+        </div>
+
+        <!-- Section 3: Safety Disclaimer -->
+        <div class="modal-content modal-disclaimer" id="modal-disclaimer" >
+            <h2 class="modal-title-warning">⚠️ Safety Warning</h2>
+            <p>
+                <strong></strong><br> This software is a <strong>demo</strong> and a <strong>research prototype</strong>.
+            </p>
+            <p>
+                This product is not certified for safety <strong>must not be used</strong> as a driver assistance tool or to make critical decisions in real road driving conditions.
+            </p>
+            <p>
+                The reliability of the models is not absolute; the system may generate incorrect detections (false positives) or miss important detections (false negatives). All liability for any improper use of this demo is disclaimed.
+            </p>
+        </div>
+    </div>
+
+    <div id="disclaimerModal" class="modal">
+        <div class="modal-content modal-disclaimer" id="modal-disclaimer">
+            <span id="closeDisclaimerButton" class="close" style="cursor: pointer; color: red;" ><i class="fa-regular fa-circle-xmark" style="color: #ff0000; top: -10px; margin-left: 95%; font-size: 20px;"></i></span>
+                <h2 class="modal-title-warning">⚠️ Safety Warning</h2>
+            <p>
+                <strong></strong><br> This software is a <strong>demo</strong> and a <strong>research prototype</strong>.
+            </p>
+            <p>
+                This product is not certified for safety <strong>must not be used</strong> as a driver assistance tool or to make critical decisions in real road driving conditions.
+            </p>
+            <p>
+                The reliability of the models is not absolute; the system may generate incorrect detections (false positives) or miss important detections (false negatives). All liability for any improper use of this demo is disclaimed.
+            </p>
+        </div>
+    </div>
+    <script>
+        const coverImage = displayCanvas.getContext('2d');
+        const imagePath = './demo/assets/images/cover_image.png';
+        const img = new Image();
+        img.onload = function() { coverImage.drawImage(img, 0, 0, displayCanvas.width, displayCanvas.height); };
+        img.src = imagePath;
+    </script>
+    <script src="./demo/assets/js/main.js"></script>
+</body>
+</html>
