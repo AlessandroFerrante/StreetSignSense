@@ -1,0 +1,82 @@
+description: Ultralytics YOLOv12n model trained on data.yaml
+author: Ultralytics
+date: '2025-12-04T23:00:43.479613'
+version: 8.3.229
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: prio_give_way
+  1: prio_stop
+  2: prio_priority_road
+  3: forb_speed_over_5
+  4: forb_speed_over_10
+  5: forb_speed_over_20
+  6: forb_speed_over_30
+  7: forb_speed_over_40
+  8: forb_speed_over_50
+  9: forb_speed_over_60
+  10: forb_speed_over_70
+  11: forb_speed_over_80
+  12: forb_speed_over_90
+  13: forb_speed_over_100
+  14: forb_speed_over_110
+  15: forb_speed_over_120
+  16: forb_speed_over_130
+  17: forb_no_entry
+  18: forb_no_parking
+  19: forb_no_stopping
+  20: forb_overtake_car
+  21: forb_overtake_trucks
+  22: forb_trucks
+  23: forb_turn_left
+  24: forb_turn_right
+  25: forb_weight_over_3.5t
+  26: forb_weight_over_7.5t
+  27: forb_u_turn
+  28: info_bus_station
+  29: info_crosswalk
+  30: info_highway
+  31: info_one_way
+  32: info_parking
+  33: info_taxi_parking
+  34: warn_children
+  35: warn_construction
+  36: warn_crosswalk
+  37: warn_cyclists
+  38: warn_left_curve
+  39: warn_right_curve
+  40: warn_domestic_animals
+  41: warn_other_dangers
+  42: warn_poor_road_surface
+  43: warn_roundabout
+  44: warn_sharp_left_curve
+  45: warn_sharp_right_curve
+  46: warn_slippery_road
+  47: warn_hump
+  48: warn_traffic_light
+  49: warn_tram
+  50: warn_two_way_traffic
+  51: warn_wild_animals
+  52: mand_bike_lane
+  53: mand_go_left
+  54: mand_go_left_right
+  55: mand_go_right
+  56: mand_go_straight
+  57: mand_go_straight_left
+  58: mand_go_straight_right
+  59: mand_pass_left
+  60: mand_pass_left_right
+  61: mand_pass_right
+  62: mand_roundabout
+args:
+  batch: 1
+  half: true
+  int8: false
+  nms: true
+channels: 3
