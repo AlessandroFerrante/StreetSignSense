@@ -90,7 +90,6 @@ async function loadModel() {
     if (model) {
         model.dispose();
         model = null;
-        tf.dispose(); 
         console.log('Modello precedente scaricato.');
     }
 
@@ -101,15 +100,14 @@ async function loadModel() {
     console.log(MODEL_PATH); // ! log path
     try {
         model = await tf.loadGraphModel(MODEL_PATH);
+        await new Promise(resolve => setTimeout(resolve, 200));
         setStatus(`${' Model optimization'} ${'<i class="fa-solid fa-hexagon-nodes-bolt"></i>'}`, 'optimization');
         const dummy = tf.zeros([1, MODEL_SIZE, MODEL_SIZE, 3]); // ? tensore di zeri
-        for(let i = 0; i < 3; i++) {
-            const result = await model.executeAsync(dummy);
-            if(Array.isArray(result)) {
-                result.forEach(t => t.dispose());
-            } else {
-                result.dispose();
-            }
+        const result = await model.executeAsync(dummy);
+        if(Array.isArray(result)) {
+            result.forEach(t => t.dispose());
+        } else {
+            result.dispose();
         }
         dummy.dispose();
        
@@ -685,8 +683,8 @@ async function loadDemoImage() {
     };
     currentImagePath = '';
     const state = window._demoImagesState;
-    const HOST_ROOT = 'https://alessandroferrante.github.io';
-    const MANIFEST_PATH_ABSOLUTE = '/StreetSignSense/demo/assets/images/demo_images/manifest.json'; 
+    const HOST_ROOT = window.location.origin;
+    const MANIFEST_PATH = '/demo/assets/images/demo_images/manifest.json'; 
 
     function shuffle(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
@@ -698,10 +696,16 @@ async function loadDemoImage() {
     async function fetchImageList() {
         
         try {
-            const response = await fetch(MANIFEST_PATH_ABSOLUTE, { cache: 'no-store' }); 
+            const response = await fetch(HOST_ROOT + MANIFEST_PATH, { cache: 'no-store' }); 
             if (response.ok) {
                 const assetPaths = await response.json(); 
-                const fullUrls = assetPaths.map(path => HOST_ROOT + path);
+                const fullUrls = assetPaths.map(path => {
+                    const cleanPath = path.startsWith('/StreetSignSense') 
+                        ? path.replace('/StreetSignSense', '') 
+                        : path;
+                    return HOST_ROOT + cleanPath;
+                });
+                               
                 if (fullUrls.length) return fullUrls;
             }
         } catch (error) { 
