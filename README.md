@@ -47,9 +47,9 @@
 
 The web application is entirely hosted on GitHub Pages and demonstrates the model's capabilities in a real and accessible environment.
 
-### [**ACCESS**](https://alessandroferrante.github.io/StreetSignSense/demo/)
+### [**ACCESS**](https://streetsignsense.alessandroferrante.net)
 
-[![](https://alessandroferrante.github.io/StreetSignSense/demo/demo_interface.png)](https://alessandroferrante.github.io/StreetSignSense)
+[![](https://alessandroferrante.github.io/StreetSignSense/demo/demo_interface.png)](https://streetsignsense.alessandroferrante.net)
 
 </div>
 
