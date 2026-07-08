@@ -37,11 +37,12 @@
 [![visitors](https://visitor-badge.laobi.icu/badge?page_id=AlessandroFerrante.StreetSignSense.readme&right_color=black)](https://github.com/AlessandroFerrante/StreetSignSense)
 ![Stelle](https://img.shields.io/github/stars/AlessandroFerrante/StreetSignSense?style=social)
  
- 
+ ---
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I6M022U0D7)
 
 **StreetSignSense** is a Machine Learning and Object Detection project focused on **real-time identification and classification of traffic signs**. The project explores the potential of executing Artificial Intelligence models directly in the browser (*client-side*) to ensure low latency, privacy, and high performance on edge devices.
 
+---
 ## 🚀 Try Demo
 
 The web application is entirely hosted on GitHub Pages and demonstrates the model's capabilities in a real and accessible environment.
@@ -90,3 +91,5 @@ The heart of the innovation: running the model directly in the user's browser.
 [Alessandro Ferrante](https://alessandroferrante.net)
 
 Email: [github@alessandroferrante.net](mailto:github@alessandroferrante.net)
+
+<a href='https://ko-fi.com/I6M022U0D7' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
